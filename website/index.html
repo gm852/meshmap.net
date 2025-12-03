@@ -31,6 +31,13 @@
   body:not(.dark) .dark-only {
     display: none;
   }
+  /* give seach and leaderboard dark mode */
+  body.dark #search-container {
+    filter: invert(1) hue-rotate(180deg) brightness(0.75);
+  }
+  body.dark #leaderboard-container {
+    filter: invert(1) hue-rotate(180deg) brightness(0.75);
+  }
   #header {
     background-color: #fff;
     box-shadow: 0 0 4px 0 rgb(0 0 0 / 40%);
@@ -41,13 +48,194 @@
     font-family: "Inter", sans-serif;
     font-size: 16px;
     line-height: 1.2;
-    height: 40px;
+    height: 50px;
     padding: 0 17px 0 15px;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
+  }
+  #search-container {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  #search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+    font-family: "Inter", sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #search-input:focus {
+    border-color: #4a90e2;
+  }
+  #search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    margin-top: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+    display: none;
+    z-index: 1001;
+    padding: 4px 0;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  #search-results.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* Custom scrollbar for search results */
+  #search-results::-webkit-scrollbar {
+    width: 8px;
+  }
+  #search-results::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+  #search-results::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+  #search-results::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+  .search-result-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .search-result-item:hover {
+    background-color: #f8f9fa;
+    border-left: 3px solid #4a90e2;
+    padding-left: 13px;
+  }
+  .search-result-item:last-child {
+    border-bottom: none;
+  }
+  .search-result-item.no-results {
+    cursor: default;
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    justify-content: center;
+  }
+  .search-result-item.no-results:hover {
+    background-color: white;
+    border-left: none;
+    padding-left: 20px;
+  }
+  .search-result-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .search-result-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .search-result-name {
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .search-result-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+  }
+  .search-result-id {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    color: #4a90e2;
+    font-weight: 500;
+  }
+  .search-result-match {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: #e8f4f8;
+    color: #2c5f7d;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .search-result-divider {
+    color: #ccc;
+  }
+  /* Dark mode support for search results */
+  body.dark #search-results {
+    background: #1a1a1a;
+    border-color: #333;
+  }
+  body.dark .search-result-item {
+    border-bottom-color: #2a2a2a;
+  }
+  body.dark .search-result-item:hover {
+    background-color: #252525;
+  }
+  body.dark .search-result-item.no-results:hover {
+    background-color: #1a1a1a;
+  }
+  body.dark .search-result-name {
+    color: #e0e0e0;
+  }
+  body.dark .search-result-meta {
+    color: #999;
+  }
+  body.dark .search-result-id {
+    color: #6ba3e3;
+  }
+  body.dark .search-result-match {
+    background-color: #2a3a4a;
+    color: #8bb4d8;
+  }
+  body.dark .search-result-divider {
+    color: #555;
+  }
+  body.dark #search-results::-webkit-scrollbar-track {
+    background: #2a2a2a;
+  }
+  body.dark #search-results::-webkit-scrollbar-thumb {
+    background: #555;
+  }
+  body.dark #search-results::-webkit-scrollbar-thumb:hover {
+    background: #666;
   }
   #header a {
     color: inherit;
@@ -61,11 +249,193 @@
   }
   #header div:nth-child(2) {
     flex-grow: 1;
-    text-align: right;
+  }
+  /* Leaderboard styles */
+  #leaderboard-container {
+    position: relative;
+  }
+  #leaderboard-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 13px;
+    color: #333;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  #leaderboard-button:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
+  }
+  #leaderboard-button i {
+    font-size: 14px;
+  }
+  #leaderboard-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+    min-width: 280px;
+    max-width: 350px;
+    max-height: 500px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1002;
+    padding: 8px 0;
+  }
+  #leaderboard-dropdown.show {
+    display: block;
+  }
+  .leaderboard-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .leaderboard-item {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    border-bottom: 1px solid #f8f8f8;
+  }
+  .leaderboard-item:hover {
+    background-color: #f8f9fa;
+  }
+  .leaderboard-item:last-child {
+    border-bottom: none;
+  }
+  .leaderboard-rank {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .leaderboard-rank.top-1 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #8b6914;
+  }
+  .leaderboard-rank.top-2 {
+    background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+    color: #5a5a5a;
+  }
+  .leaderboard-rank.top-3 {
+    background: linear-gradient(135deg, #cd7f32 0%, #e6a055 100%);
+    color: #6b4a1a;
+  }
+  .leaderboard-rank.other {
+    background: #f0f0f0;
+    color: #666;
+  }
+  .leaderboard-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .leaderboard-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1a1a1a;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .leaderboard-stats {
+    font-size: 11px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .leaderboard-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .leaderboard-stat i {
+    font-size: 10px;
+  }
+  /* Dark mode for leaderboard */
+  body.dark #leaderboard-button {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  body.dark #leaderboard-button:hover {
+    background: #333;
+    border-color: #555;
+  }
+  body.dark #leaderboard-dropdown {
+    background: #1a1a1a;
+    border-color: #333;
+  }
+  body.dark .leaderboard-header {
+    border-bottom-color: #2a2a2a;
+    color: #e0e0e0;
+  }
+  body.dark .leaderboard-item {
+    border-bottom-color: #2a2a2a;
+  }
+  body.dark .leaderboard-item:hover {
+    background-color: #252525;
+  }
+  body.dark .leaderboard-name {
+    color: #e0e0e0;
+  }
+  body.dark .leaderboard-stats {
+    color: #999;
+  }
+  body.dark .leaderboard-rank.other {
+    background: #333;
+    color: #999;
+  }
+  /* Leaderboard scrollbar */
+  #leaderboard-dropdown::-webkit-scrollbar {
+    width: 8px;
+  }
+  #leaderboard-dropdown::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+  #leaderboard-dropdown::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+  #leaderboard-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+  body.dark #leaderboard-dropdown::-webkit-scrollbar-track {
+    background: #2a2a2a;
+  }
+  body.dark #leaderboard-dropdown::-webkit-scrollbar-thumb {
+    background: #555;
+  }
+  body.dark #leaderboard-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #666;
   }
   #map {
     position: absolute;
-    top: 40px;
+    top: 50px;
     bottom: 0;
     left: 0;
     right: 0;
@@ -94,6 +464,62 @@
   }
   .leaflet-popup-content table {
     margin-top: 1em;
+  }
+  .popup-tabs {
+    display: flex;
+    border-bottom: 2px solid #eee;
+    margin: 10px 0;
+  }
+  .popup-tab {
+    flex: 1;
+    padding: 8px 12px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    color: #666;
+    transition: all 0.2s;
+  }
+  .popup-tab:hover {
+    background-color: #f5f5f5;
+  }
+  .popup-tab.active {
+    color: #4a90e2;
+    border-bottom: 2px solid #4a90e2;
+    font-weight: 600;
+  }
+  .popup-tab-content {
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .popup-tab-content.active {
+    display: block;
+  }
+  .message-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+  }
+  .message-item:last-child {
+    border-bottom: none;
+  }
+  .message-text {
+    color: #333;
+    margin-bottom: 4px;
+    word-wrap: break-word;
+  }
+  .message-time {
+    font-size: 11px;
+    color: #999;
+  }
+  .no-messages {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-size: 13px;
   }
   .leaflet-right .leaflet-control-attribution {
     text-align: right;
@@ -128,6 +554,17 @@
 <div id="header">
   <div>
     <a href="https://meshmap.net/" title="A nearly live map of Meshtastic nodes seen by the official Meshtastic MQTT server">MeshMap</a>
+  </div>
+  <div id="search-container">
+    <input type="text" id="search-input" placeholder="Search nodes by name or ID (e.g., !a1b2c3d4)..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="leaderboard-container">
+    <div id="leaderboard-button" onclick="toggleLeaderboard()">
+      <i class="fa fa-trophy"></i>
+      <span>Top Nodes</span>
+    </div>
+    <div id="leaderboard-dropdown"></div>
   </div>
   <div>
     <a href="#" onclick="toggleDark();return false;" title="Toggle dark mode">
@@ -203,15 +640,106 @@
   // add node details layer (precision circle, relation lines)
   const detailsLayer = L.layerGroup().addTo(map)
   map.on('click', () => detailsLayer.clearLayers())
-  // add search control
-  map.addControl(new L.Control.Search({
-    layer: markers,
-    propertyName: 'searchString',
-    initial: false,
-    position: 'topleft',
-    marker: false,
-    moveToLocation: (_, s) => showNode(nodesBySearchString[s]),
-  }))
+  let allNodesData = {}
+  const searchInput = document.getElementById('search-input')
+  const searchResults = document.getElementById('search-results')
+  
+  const performSearch = (query) => {
+    if (!query || query.trim().length === 0) {
+      searchResults.classList.remove('show')
+      return
+    }
+    
+    const q = query.toLowerCase().trim()
+    const results = []
+    
+    // search by node ID
+    if (q.startsWith('!')) {
+      try {
+        const nodeNum = parseInt(q.slice(1), 16)
+        if (allNodesData[nodeNum]) {
+          const node = allNodesData[nodeNum]
+          const id = `!${Number(nodeNum).toString(16)}`
+          results.push({
+            nodeNum,
+            name: node.longName || 'Unknown',
+            shortName: node.shortName || '',
+            id,
+            match: 'ID'
+          })
+        }
+      } catch (e) {
+        console.error('Invalid hex:', e)
+      }
+    }
+    
+    // Search by name
+    Object.entries(allNodesData).forEach(([nodeNum, node]) => {
+      const longName = (node.longName || '').toLowerCase()
+      const shortName = (node.shortName || '').toLowerCase()
+      const id = `!${Number(nodeNum).toString(16)}`.toLowerCase()
+      
+      if (longName.includes(q) || shortName.includes(q) || id.includes(q)) {
+        if (!results.find(r => r.nodeNum === Number(nodeNum))) {
+          results.push({
+            nodeNum: Number(nodeNum),
+            name: node.longName || 'Unknown',
+            shortName: node.shortName || '',
+            id: `!${Number(nodeNum).toString(16)}`,
+            match: longName.includes(q) ? 'Name' : shortName.includes(q) ? 'Short Name' : 'ID'
+          })
+        }
+      }
+    })
+    
+    // show results
+    if (results.length > 0) {
+      const displayResults = results.slice(0, 10)
+      const hasMore = results.length > 10
+      searchResults.innerHTML = displayResults.map(r => {
+        const initials = (r.shortName || r.name || '?').substring(0, 2).toUpperCase()
+        return `
+        <div class="search-result-item" onclick="selectSearchResult(${r.nodeNum})">
+          <div class="search-result-icon">${html(initials)}</div>
+          <div class="search-result-content">
+            <div class="search-result-name">${html(r.name)}${r.shortName ? ` <span style="color:#888;font-weight:400;">(${html(r.shortName)})</span>` : ''}</div>
+            <div class="search-result-meta">
+              <span class="search-result-id">${r.id}</span>
+              <span class="search-result-divider">•</span>
+              <span class="search-result-match">${r.match}</span>
+            </div>
+          </div>
+        </div>
+      `}).join('') + (hasMore ? `<div class="search-result-item no-results" style="font-size:12px;padding:8px 16px;"><i class="fa fa-info-circle" style="margin-right:6px;"></i>Showing 10 of ${results.length} results</div>` : '')
+      searchResults.classList.add('show')
+    } else {
+      searchResults.innerHTML = '<div class="search-result-item no-results"><i class="fa fa-search" style="margin-right:8px;"></i>No nodes found</div>'
+      searchResults.classList.add('show')
+    }
+  }
+  
+  window.selectSearchResult = function(nodeNum) {
+    searchResults.classList.remove('show')
+    searchInput.value = ''
+    showNode(nodeNum)
+  }
+  
+  searchInput.addEventListener('input', (e) => {
+    performSearch(e.target.value)
+  })
+  
+  searchInput.addEventListener('focus', () => {
+    if (searchInput.value.trim().length > 0) {
+      performSearch(searchInput.value)
+    }
+  })
+  
+  // Close search results when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+      searchResults.classList.remove('show')
+    }
+  })
   // add zoom control
   L.control.zoom({position: 'topright'}).addTo(map)
   // add geolocation control
@@ -248,8 +776,126 @@
   })
   // generates html for a node link
   const nodeLink = (num, label) => `<a href="#${num}" onclick="showNode(${num});return false;">${html(label)}</a>`
+  // Tab switching (must be global for onclick)
+  window.switchTab = function(button, tabName) {
+    const popup = button.closest('.leaflet-popup-content')
+    popup.querySelectorAll('.popup-tab').forEach(t => t.classList.remove('active'))
+    popup.querySelectorAll('.popup-tab-content').forEach(c => c.classList.remove('active'))
+    button.classList.add('active')
+    popup.querySelector(`#tab-${tabName}`).classList.add('active')
+  }
+  // leaderboard
+  const leaderboardDropdown = document.getElementById('leaderboard-dropdown')
+  let leaderboardOpen = false
+  
+  window.toggleLeaderboard = function() {
+    leaderboardOpen = !leaderboardOpen
+    if (leaderboardOpen) {
+      updateLeaderboard()
+      leaderboardDropdown.classList.add('show')
+    } else {
+      leaderboardDropdown.classList.remove('show')
+    }
+  }
+  
+  // Close leaderboard when clicking outside
+  document.addEventListener('click', (e) => {
+    const container = document.getElementById('leaderboard-container')
+    if (container && !container.contains(e.target) && leaderboardOpen) {
+      leaderboardOpen = false
+      leaderboardDropdown.classList.remove('show')
+    }
+  })
+  
+  const updateLeaderboard = () => {
+    if (!allNodesData || Object.keys(allNodesData).length === 0) {
+      leaderboardDropdown.innerHTML = '<div class="leaderboard-header"><i class="fa fa-info-circle"></i> No data available</div>'
+      return
+    }
+    
+    // Calculate activity score for each node
+    const now = Date.now() / 1000
+    const leaderboard = Object.entries(allNodesData)
+      .map(([nodeNum, node]) => {
+        const messageCount = (node.messages || []).length
+        const lastSeen = Math.max(...Object.values(node.seenBy || {}), 0)
+        const timeSinceLastSeen = now - lastSeen
+        // Activity score: message count * 10 + (recent activity bonus)
+        // Recent activity = higher score for nodes seen in last hour
+        const recentActivityBonus = timeSinceLastSeen < 3600 ? 50 : Math.max(0, 100 - timeSinceLastSeen / 60)
+        const activityScore = messageCount * 10 + recentActivityBonus
+        
+        return {
+          nodeNum: Number(nodeNum),
+          name: node.longName || 'Unknown',
+          shortName: node.shortName || '',
+          id: `!${Number(nodeNum).toString(16)}`,
+          messageCount,
+          lastSeen,
+          activityScore
+        }
+      })
+      .filter(node => node.messageCount > 0 || node.lastSeen > 0) // Only show nodes with some activity
+      .sort((a, b) => {
+        // Sort by activity score, then by message count, then by last seen
+        if (b.activityScore !== a.activityScore) {
+          return b.activityScore - a.activityScore
+        }
+        if (b.messageCount !== a.messageCount) {
+          return b.messageCount - a.messageCount
+        }
+        return b.lastSeen - a.lastSeen
+      })
+      .slice(0, 10) // Top 10
+    
+    if (leaderboard.length === 0) {
+      leaderboardDropdown.innerHTML = '<div class="leaderboard-header"><i class="fa fa-info-circle"></i> No active nodes</div>'
+      return
+    }
+    
+    leaderboardDropdown.innerHTML = `
+      <div class="leaderboard-header">
+        <i class="fa fa-trophy"></i>
+        Most Active Nodes
+      </div>
+      ${leaderboard.map((node, index) => {
+        const rank = index + 1
+        const rankClass = rank === 1 ? 'top-1' : rank === 2 ? 'top-2' : rank === 3 ? 'top-3' : 'other'
+        return `
+          <div class="leaderboard-item" onclick="selectLeaderboardNode(${node.nodeNum})">
+            <div class="leaderboard-rank ${rankClass}">${rank}</div>
+            <div class="leaderboard-info">
+              <div class="leaderboard-name">${html(node.name)}${node.shortName ? ` <span style="color:#888;font-weight:400;">(${html(node.shortName)})</span>` : ''}</div>
+              <div class="leaderboard-stats">
+                <span class="leaderboard-stat">
+                  <i class="fa fa-comment"></i>
+                  ${node.messageCount} ${node.messageCount === 1 ? 'message' : 'messages'}
+                </span>
+                <span class="leaderboard-stat">
+                  <i class="fa fa-clock-o"></i>
+                  ${since(node.lastSeen)}
+                </span>
+              </div>
+            </div>
+          </div>
+        `
+      }).join('')}
+    `
+  }
+  
+  window.selectLeaderboardNode = function(nodeNum) {
+    leaderboardOpen = false
+    leaderboardDropdown.classList.remove('show')
+    showNode(nodeNum)
+  }
+  
   // updates node map markers
   const updateNodes = data => {
+    allNodesData = data
+    // Update leaderboard if it's open
+    if (leaderboardOpen) {
+      updateLeaderboard()
+    }
     const popupWasOpen = lastActiveNode && markersByNode[lastActiveNode]?.isPopupOpen()
     const detailsLayerWasPopulated = detailsLayer.getLayers().length > 0
     markersByNode = {}
@@ -322,9 +968,26 @@
       const lastSeen = Math.max(...Object.values(seenBy))
       const opacity = 1.0 - (Date.now() / 1000 - lastSeen) / 129600
       const tooltipContent = `${html(longName)} (${html(shortName)}) ${since(lastSeen)}`
+      
+      // Messages section
+      const messages = node.messages || []
+      const messagesHtml = messages.length > 0
+        ? messages.slice().reverse().map(msg => `
+            <div class="message-item">
+              <div class="message-text">${html(msg.text)}</div>
+              <div class="message-time">${since(msg.timestamp)}</div>
+            </div>
+          `).join('')
+        : '<div class="no-messages">No messages available</div>'
+      
       const popupContent = `
         <div class="title">${html(longName)} (${html(shortName)})</div>
         <div>${nodeLink(nodeNum, id)} | ${html(role)} | ${html(hwModel)}</div>
+        <div class="popup-tabs">
+          <button class="popup-tab active" onclick="switchTab(this, 'info-${nodeNum}')">Info</button>
+          <button class="popup-tab" onclick="switchTab(this, 'messages-${nodeNum}')">Messages ${messages.length > 0 ? `(${messages.length})` : ''}</button>
+        </div>
+        <div id="tab-info-${nodeNum}" class="popup-tab-content active">
         <table><tbody>
         ${uptime             ? `<tr><th>Uptime</th><td>${duration(uptime)}</td></tr>`                                : ''}
         ${batteryLevel       ? `<tr><th>Power</th><td>${batteryLevel > 100 ? 'Plugged in' : `${batteryLevel}%`}` +
@@ -378,6 +1041,12 @@
           `
         ).reverse().join('')}
         </tbody></table>
+        </div>
+        <div id="tab-messages-${nodeNum}" class="popup-tab-content">
+          <div style="max-height: 300px; overflow-y: auto;">
+            ${messagesHtml}
+          </div>
+        </div>
       `
       const searchString = `${longName} (${shortName}) ${id}`
       nodesBySearchString[searchString] = nodeNum

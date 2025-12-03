@@ -39,7 +39,24 @@ func handleMessage(from uint32, topic string, portNum generated.PortNum, payload
 	Receiving.Store(true)
 	switch portNum {
 	case generated.PortNum_TEXT_MESSAGE_APP:
-		log.Printf("[msg] (%v) <%v> %s", topic, from, payload)
+		messageText := string(payload)
+		if len(messageText) > 0 {
+			NodesMutex.Lock()
+			if Nodes[from] == nil {
+				Nodes[from] = meshtastic.NewNode(topic)
+			}
+			Nodes[from].AddMessage(messageText)
+			// Update SeenBy to keep node alive and mark it as recently active
+			Nodes[from].UpdateSeenBy(topic)
+			msgCount := len(Nodes[from].Messages)
+			isValid := Nodes[from].IsValid()
+			nodeName := Nodes[from].LongName
+			if len(nodeName) == 0 {
+				nodeName = "unnamed"
+			}
+			NodesMutex.Unlock()
+			log.Printf("[msg] (%v) <%v> %s (node '%v' has %v messages, valid: %v)", topic, from, messageText, nodeName, msgCount, isValid)
+		}
 	case generated.PortNum_POSITION_APP:
 		var position generated.Position
 		if err := proto.Unmarshal(payload, &position); err != nil {
@@ -276,11 +293,20 @@ func main() {
 			Nodes.Prune(NodeExpiration, NeighborExpiration, MetricsExpiration, NodeExpiration)
 			if len(dbPath) > 0 {
 				valid := Nodes.GetValid()
+				// Count nodes with messages for debugging
+				nodesWithMessages := 0
+				totalMessages := 0
+				for _, node := range valid {
+					if len(node.Messages) > 0 {
+						nodesWithMessages++
+						totalMessages += len(node.Messages)
+					}
+				}
 				err := valid.WriteFile(dbPath)
 				if err != nil {
 					log.Fatalf("[fatal] write nodes: %v", err)
 				}
-				log.Printf("[info] wrote %v nodes to disk", len(valid))
+				log.Printf("[info] wrote %v nodes to disk (%v nodes with %v total messages)", len(valid), nodesWithMessages, totalMessages)
 			}
 			NodesMutex.Unlock()
 			if !Receiving.CompareAndSwap(true, false) {

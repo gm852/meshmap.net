@@ -11,6 +11,7 @@ import (
 const (
 	SeenByLimit   = 10
 	NeighborLimit = 100
+	MessageLimit  = 50
 )
 
 func cleanFloat(f float32) float32 {
@@ -68,6 +69,13 @@ type Node struct {
 	Neighbors map[uint32]*NeighborInfo `json:"neighbors,omitempty"`
 	// key=mqtt topic, value=first seen/last position update
 	SeenBy map[string]int64 `json:"seenBy"`
+	// Messages
+	Messages []Message `json:"messages,omitempty"`
+}
+
+type Message struct {
+	Text      string `json:"text"`
+	Timestamp int64  `json:"timestamp"`
 }
 
 func NewNode(topic string) *Node {
@@ -168,6 +176,21 @@ func (node *Node) Prune(seenByTtl, neighborTtl, metricsTtl, mapReportTtl int64) 
 	if node.LastMapReport > 0 && node.LastMapReport+mapReportTtl < now {
 		node.ClearMapReportData()
 	}
+	// Messages | keep only recent messages to save space (24h)
+	if len(node.Messages) > 0 {
+		cutoff := now - 86400 // 24 hours
+		filtered := make([]Message, 0, len(node.Messages))
+		for _, msg := range node.Messages {
+			if msg.Timestamp >= cutoff {
+				filtered = append(filtered, msg)
+			}
+		}
+		node.Messages = filtered
+	}
+	// Limit message count
+	for len(node.Messages) > MessageLimit {
+		node.Messages = node.Messages[1:]
+	}
 }
 
 func (node *Node) UpdateDeviceMetrics(batteryLevel uint32, voltage, chUtil, airUtilTx float32, uptime uint32) {
@@ -228,6 +251,20 @@ func (node *Node) UpdateUser(longName, shortName, hwModel, role string) {
 	node.ShortName = shortName
 	node.HwModel = hwModel
 	node.Role = role
+}
+
+func (node *Node) AddMessage(text string) {
+	if node.Messages == nil {
+		node.Messages = make([]Message, 0, MessageLimit)
+	}
+	node.Messages = append(node.Messages, Message{
+		Text:      text,
+		Timestamp: time.Now().Unix(),
+	})
+	// Keep only the most recent messages
+	for len(node.Messages) > MessageLimit {
+		node.Messages = node.Messages[1:]
+	}
 }
 
 type NodeDB map[uint32]*Node
